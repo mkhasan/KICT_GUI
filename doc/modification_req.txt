@@ -1,0 +1,18 @@
+1. 360 degree camera rotation and joystick funciton 
+	a. specification of angle interval 
+	b. 
+	c. angle adjustment 
+		1) In the log file, angle is different from real angle (80 deg -> 79.78 deg)
+		2) Joystick input 10 deg interval does not move exactly 10 deg
+
+2. Mobile platform camera position (left, right) correction
+
+3. Fixing front left camera
+
+4. Fixing mobile platform image database frame missing problem
+
+5. Installagtion of mobile platform GPS data correction in a laptop pc (possible ???)
+
+6. In auto and semi auto mode change default logging rate to 1 sec
+
+7. Installatio of video mode
