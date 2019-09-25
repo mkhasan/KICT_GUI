@@ -1,6 +1,6 @@
 1. 360 degree camera rotation and joystick funciton 
 	a. specification of angle interval 
-	b. 
+	b. take inputs from user (Angle, Time)...then go to -180 deg and rotate to positive direction Angle amount and wait Time sec and then rotate again ...while doing this take pictures in the each interval...cover 360 degrees and then come back to original poisition
 	c. angle adjustment 
 		1) In the log file, angle is different from real angle (80 deg -> 79.78 deg)
 		2) Joystick input 10 deg interval does not move exactly 10 deg
