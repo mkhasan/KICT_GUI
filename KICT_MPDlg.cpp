@@ -312,6 +312,9 @@ BEGIN_MESSAGE_MAP(CKICT_MPDlg, CDialogEx)
 	ON_COMMAND(ID_SETTING_REBOOT, &CKICT_MPDlg::OnSettingReboot)
 	ON_COMMAND(ID_Menu, &CKICT_MPDlg::OnSettingPowerOff)	
 	ON_COMMAND(ID_DATA_DELETEALL, &CKICT_MPDlg::OnDataDeleteall)
+	
+	ON_COMMAND(ID_SNAP_AROUND, &CKICT_MPDlg::OnSnapAround)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 // CKICT_MPDlg message handlers
@@ -395,6 +398,25 @@ BOOL CKICT_MPDlg::OnInitDialog()
 	mqtt0->publish(NULL, GET_IMU, 0, NULL, 1, false);
 	mqtt0->publish(NULL, GET_GPS, 0, NULL, 1, false);
 	_save = 0; // 0 중지 1 저장중
+
+	/////////////// snap around /////////////////
+
+	if (!m_snapper.CreateDispatch(_T("KICT.SnapAround")))
+
+	{
+
+		AfxMessageBox(_T("KICT.SnapAround component not found"));
+
+		return FALSE;
+
+	}
+
+
+	
+
+	//////////////////////////////////////////
+
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -1885,3 +1907,28 @@ void CKICT_MPDlg::OnDataDeleteall()
 	robot_db.Close();	
 }
 
+
+
+
+
+void CKICT_MPDlg::OnSnapAround()
+{
+	// TODO: Add your command handler code here
+	BOOL result;
+	//AfxMessageBox(_T("KICT.SnapAround found lor!!!"));
+
+	CString str("here you go");
+	static BYTE parms[] = VTS_BSTR;
+	m_snapper.InvokeHelper(1, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms, str);
+
+	TRACE("%d", result);
+
+}
+
+
+void CKICT_MPDlg::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+	m_snapper.ReleaseDispatch();
+	CDialogEx::OnClose();
+}

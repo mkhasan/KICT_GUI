@@ -280,6 +280,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CSnapAround.h" />
     <ClInclude Include="Dr_robot.h" />
     <ClInclude Include="gamepad.h" />
     <ClInclude Include="IpCamera.h" />

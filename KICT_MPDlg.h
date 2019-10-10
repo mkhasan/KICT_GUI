@@ -17,6 +17,8 @@
 
 #include "mosquittopp.h" //MQTT
 
+#include "CSnapAround.h"
+
 #define TM_PING 100
 #define TM_GAMEPAD 123
 #define TM_GRAPH 200
@@ -346,6 +348,11 @@ public:
 	CButton bt_pan_plus;
 	CButton c_cap;
 
+	
+	CSnapAround m_snapper;
+
+
+
 	afx_msg void OnBnClickedBtCap();
 	afx_msg void OnBnClickedBtPanP();
 	afx_msg void OnBnClickedBtPanM();
@@ -417,4 +424,7 @@ public:
 	CStatic st_xsens_acc_pitch;
 	CStatic st_xsens_acc_yaw;
 	afx_msg void OnDataDeleteall();
+	
+	afx_msg void OnSnapAround();
+	afx_msg void OnClose();
 };

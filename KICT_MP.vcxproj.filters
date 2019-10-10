@@ -60,6 +60,9 @@
     <ClInclude Include="Load.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CSnapAround.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KICT_MP.cpp">

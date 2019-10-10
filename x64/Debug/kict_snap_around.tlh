@@ -1,0 +1,41 @@
+﻿// Created by Microsoft (R) C/C++ Compiler Version 12.00.21005.1 (3a4a2842).
+//
+// e:\kict_gui\x64\debug\kict_snap_around.tlh
+//
+// C++ source equivalent of type library E:\\KICT_OLE\\KICT_SNAP_AROUND\\KICT_SNAP_AROUND\\x64\\Debug\\KICT_SNAP_AROUND.tlb
+// compiler-generated file created 10/10/19 at 20:33:34 - DO NOT EDIT!
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("42f020d5-8532-46ed-9fc4-262586317ef9"))
+/* LIBID */ __KICT_SNAP_AROUND;
+struct __declspec(uuid("ce06af58-c0d9-474f-bd65-28ce39953704"))
+/* dispinterface */ ISnapAround;
+struct /* coclass */ SnapAround;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(ISnapAround, __uuidof(ISnapAround));
+
+//
+// Type library items
+//
+
+struct __declspec(uuid("ce06af58-c0d9-474f-bd65-28ce39953704"))
+ISnapAround : IDispatch
+{};
+
+struct __declspec(uuid("9071e3c4-4c40-460f-9d61-1d48f3277718"))
+SnapAround;
+    // [ default ] dispinterface ISnapAround
+
+#pragma pack(pop)
