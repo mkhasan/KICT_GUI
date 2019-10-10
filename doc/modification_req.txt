@@ -15,4 +15,7 @@
 
 6. In auto and semi auto mode change default logging rate to 1 sec
 
-7. Installatio of video mode
+7. Implementation of video mode
+
+question: default tilt angle  in spectator moving mode
+1.C -> give absolute angle from the GUI 

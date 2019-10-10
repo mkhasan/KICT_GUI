@@ -1308,7 +1308,7 @@ void CKICT_MPDlg::LoadIpSetting()
 	char fname[128] = { 0, };
 	sprintf_s(fname, "IpSetting.txt");
 	if ((err = fopen_s(&fp_setting, fname, "r")) != 0) //0이면 성공, 파일 읽어서 이전 setting 값을 불러 온다.
-	{
+	{ 
 		strcpy_s(_ip_DrMobile, "0.0.0.0");
 		strcpy_s(_ip_DrCamera, "0.0.0.0");
 		strcpy_s(_ip_NightCameraL, "0.0.0.0");
