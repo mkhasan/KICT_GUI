@@ -1,6 +1,6 @@
 // Machine generated IDispatch wrapper class(es) created with Add Class from Typelib Wizard
 
-#import "E:\\KICT_OLE\\KICT_SNAP_AROUND\\KICT_SNAP_AROUND\\x64\\Debug\\KICT_SNAP_AROUND.tlb" no_namespace
+#import "C:\\KICT_SNAP_AROUND\\KICT_SNAP_AROUND\\x64\\Debug\\KICT_SNAP_AROUND.tlb" no_namespace
 // CSnapAround wrapper class
 
 class CSnapAround : public COleDispatchDriver

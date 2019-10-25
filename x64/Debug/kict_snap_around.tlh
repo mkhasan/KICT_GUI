@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 12.00.21005.1 (3a4a2842).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 12.00.21005.1 (2452fbab).
 //
-// e:\kict_gui\x64\debug\kict_snap_around.tlh
+// c:\kict_gui\x64\debug\kict_snap_around.tlh
 //
-// C++ source equivalent of type library E:\\KICT_OLE\\KICT_SNAP_AROUND\\KICT_SNAP_AROUND\\x64\\Debug\\KICT_SNAP_AROUND.tlb
-// compiler-generated file created 10/10/19 at 20:33:34 - DO NOT EDIT!
+// C++ source equivalent of type library C:\\KICT_SNAP_AROUND\\KICT_SNAP_AROUND\\x64\\Debug\\KICT_SNAP_AROUND.tlb
+// compiler-generated file created 10/11/19 at 14:53:54 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
