@@ -225,27 +225,44 @@ void CKICT_MPDlg::OnTimer(UINT_PTR nIDEvent)
 		///////////////////// 팬틸트 조이패드 오른쪽 스틱 조작(연속) ///////////////////
 		if (gamepad.rightStickX < -0.9 && (state_PT_STICK != 1)) //좌
 		{
-			mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("-1.0 0.0"), "-1.0 0.0", 1, false);
+			//mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("-1.0 0.0"), "-1.0 0.0", 1, false);
+			expectedPan -= 5;
+			char str[16] = { 0, };
+			sprintf_s(str, "%.4f", expectedPan.GetValue());
+			mqtt0->publish(NULL, SPECTATOR_GOTO_PAN_ABS, strlen(str), str, 1, false);
 			state_PT_STICK = 1;
 		}
 		else if (gamepad.rightStickX > 0.9 && (state_PT_STICK != 2)) //우
 		{
-			mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("1.0 0.0"), "1.0 0.0", 1, false);
+			//mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("1.0 0.0"), "1.0 0.0", 1, false);
+			expectedPan += 5;
+			char str[16] = { 0, };
+			sprintf_s(str, "%.4f", expectedPan.GetValue());
+			mqtt0->publish(NULL, SPECTATOR_GOTO_PAN_ABS, strlen(str), str, 1, false);
 			state_PT_STICK = 2;
 		}
 		else if (gamepad.rightStickY > 0.9 && (state_PT_STICK != 3)) //상
 		{
-			mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("0.0 1.0"), "0.0 1.0", 1, false);
+			//mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("0.0 1.0"), "0.0 1.0", 1, false);
+			expectedTilt += 5;
+			char str[16] = { 0, };
+			sprintf_s(str, "%.4f", expectedTilt.GetValue());
+			mqtt0->publish(NULL, SPECTATOR_GOTO_TILT_ABS, strlen(str), str, 1, false);
 			state_PT_STICK = 3;
 		}
 		else if (gamepad.rightStickY < -0.9 && (state_PT_STICK != 4)) //하
 		{
-			mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("0.0 -1.0"), "0.0 -1.0", 1, false);
+			//mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("0.0 -1.0"), "0.0 -1.0", 1, false);
+			expectedTilt -= 5;
+			char str[16] = { 0, };
+			sprintf_s(str, "%.4f", expectedTilt.GetValue());
+			mqtt0->publish(NULL, SPECTATOR_GOTO_TILT_ABS, strlen(str), str, 1, false);
 			state_PT_STICK = 4;
 		}
 		else if (gamepad.rightStickX >= -0.1 && gamepad.rightStickX <= 0.1 && gamepad.rightStickY <= 0.1 && gamepad.rightStickY >= -0.1 && (state_PT_STICK != 0)) //정지
 		{
-			mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("0.0 0.0"), "0.0 0.0", 1, false);
+			//mqtt0->publish(NULL, PAD_STICK_RIGHT, strlen("0.0 0.0"), "0.0 0.0", 1, false);
+
 			state_PT_STICK = 0;
 		}
 			

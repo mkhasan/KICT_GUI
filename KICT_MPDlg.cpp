@@ -81,12 +81,21 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CAboutDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
+
+
 CKICT_MPDlg::CKICT_MPDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CKICT_MPDlg::IDD, pParent)	
+	: CDialogEx(CKICT_MPDlg::IDD, pParent)
 	, v_speed_in(100) //속도 설정
 	, v_pan_in(0)
 	, v_tilt_in(0)
+//	, expectedPan(ExpectedValue<int>(0, -180, 180))
+//	, expectedTilt(ExpectedValue<int>(0, -45, 45))
 {
+	//lowerLimits[0] = -180
+	//int k = (expectedPan += -190).GetValue();
+
+	expectedPan = ExpectedValue<double>(0, -180, 180);
+	expectedTilt = ExpectedValue<double>(0, -45, 45);
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -1716,25 +1725,47 @@ void CKICT_MPDlg::OnBnClickedBtCap() //capture once
 
 void CKICT_MPDlg::OnBnClickedBtPanP()
 {
-	mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("B"), "B", 1, false);
+
+	
+	expectedPan += STEP_ANGLE;
+	char str[16] = { 0, };
+	sprintf_s(str, "%.4f", expectedPan.GetValue());
+	mqtt0->publish(NULL, SPECTATOR_GOTO_PAN_ABS, strlen(str), str, 1, false);
+	
+	//mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("B"), "B", 1, false);
 }
 
 
 void CKICT_MPDlg::OnBnClickedBtPanM()
 {
-	mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("X"), "X", 1, false);
+	expectedPan -= STEP_ANGLE;
+	char str[16] = { 0, };
+	sprintf_s(str, "%.4f", expectedPan.GetValue());
+	mqtt0->publish(NULL, SPECTATOR_GOTO_PAN_ABS, strlen(str), str, 1, false);
+
+	//mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("X"), "X", 1, false);
 }
 
 
 void CKICT_MPDlg::OnBnClickedBtTiltP()
 {
-	mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("Y"), "Y", 1, false);
+	
+	expectedTilt += STEP_ANGLE;
+	char str[16] = { 0, };
+	sprintf_s(str, "%.4f", expectedTilt.GetValue());
+	mqtt0->publish(NULL, SPECTATOR_GOTO_TILT_ABS, strlen(str), str, 1, false);
+	//mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("Y"), "Y", 1, false);
 }
 
 
 void CKICT_MPDlg::OnBnClickedBtTiltM()
 {
-	mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("A"), "A", 1, false);
+	expectedTilt -= STEP_ANGLE;
+	char str[16] = { 0, };
+	sprintf_s(str, "%.4f", expectedTilt.GetValue());
+	mqtt0->publish(NULL, SPECTATOR_GOTO_TILT_ABS, strlen(str), str, 1, false);
+
+	//mqtt0->publish(NULL, PAD_BUTTON_XYAB, strlen("A"), "A", 1, false);
 }
 
 
@@ -1782,8 +1813,23 @@ void CKICT_MPDlg::OnBnClickedBtPanSet()
 	if (re)
 	{
 		int value = v_pan_in;
-		char str[16] = { 0, };
-		sprintf_s(str, "%d", value);		
+		CString valStr;
+		double angle;
+		try {
+			GetDlgItem(IDC_ED_PAN_IN)->GetWindowText(valStr);
+			angle = stod(valStr.GetBuffer());
+
+		}
+		catch (...) {
+			angle = (double)value;
+		}
+
+
+		expectedPan = angle;
+
+		
+		char str[50] = { 0, };
+		sprintf_s(str, "%.4f", expectedPan.GetValue());		
 		mqtt0->publish(NULL, SPECTATOR_GOTO_PAN_ABS, strlen(str), str, 1, false);
 	}
 }
@@ -1795,8 +1841,21 @@ void CKICT_MPDlg::OnBnClickedBtTiltSet()
 	if (re)
 	{
 		int value = v_tilt_in;
-		char str[16] = { 0, };
-		sprintf_s(str, "%d", value);
+		CString valStr;
+		double angle;
+		try {
+			GetDlgItem(IDC_ED_TILT_IN)->GetWindowText(valStr);
+			angle = stod(valStr.GetBuffer());
+			
+		}
+		catch (...) {
+			angle = (double)value;
+		}
+
+
+		expectedTilt = angle;
+		char str[50] = { 0, };
+		sprintf_s(str, "%.4f", expectedTilt.GetValue());
 		mqtt0->publish(NULL, SPECTATOR_GOTO_TILT_ABS, strlen(str), str, 1, false);
 	}
 }
@@ -1932,3 +1991,4 @@ void CKICT_MPDlg::OnClose()
 	m_snapper.ReleaseDispatch();
 	CDialogEx::OnClose();
 }
+

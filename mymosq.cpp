@@ -74,6 +74,8 @@ void myMosq::on_message(const struct mosquitto_message *message)
 		double v_tilt = 0;
 		char str[128] = { 0, };
 		char * context = NULL;
+
+		static bool first = true;
 		
 		//if (message->payload == NULL)
 		//	return; 		
@@ -109,6 +111,14 @@ void myMosq::on_message(const struct mosquitto_message *message)
 		m_point->ed_pan.SetWindowTextW(t_pan);
 		t_tilt.Format(_T("%.2f"), v_tilt);
 		m_point->ed_tilt.SetWindowTextW(t_tilt);
+		if (first) {
+			//int k = round(v_pan);
+			//int l = round()
+			m_point->expectedPan.SetValue((double)v_pan);
+			m_point->expectedTilt.SetValue((double)v_tilt);
+			first = false;
+
+		}
 	}
 	
 	else if (!strcmp(message->topic, SPECTATOR_IMU)) //IMU

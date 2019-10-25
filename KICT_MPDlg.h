@@ -2,6 +2,7 @@
 #pragma warning (disable : 4267 4819)
 
 #include "stdafx.h"
+
 #include "afxdb.h"
 //#define UM_ACCEPT (WM_USER+200)       
 //#define UM_DATARECEIVE (WM_USER+201)
@@ -18,6 +19,8 @@
 #include "mosquittopp.h" //MQTT
 
 #include "CSnapAround.h"
+
+
 
 #define TM_PING 100
 #define TM_GAMEPAD 123
@@ -47,7 +50,57 @@
 #define LIGHT_OFF "KICT_MP/CLIENT/LIGHTS_OFF" 
 #define SPEED_LIMIT 500
 
+
+template <class T>
+class ExpectedValue {
+	T theta;
+	T lowerLimit;
+	T upperLimit;
+public:
+	ExpectedValue() {
+
+	}
+
+ 	ExpectedValue(T _theta, T _lowerLimit, T _upperLimit)
+		: theta(_theta), lowerLimit(_lowerLimit), upperLimit(_upperLimit)
+	{
+
+	}
+	void SetValue(T alpha) {
+		if (alpha >= lowerLimit && alpha <= upperLimit)
+			theta = alpha;
+
+	}
+	T GetValue() const {
+		return theta;
+	}
+	
+	const ExpectedValue & operator = (T alpha) {
+		this->SetValue(alpha);
+		return *this;
+	}
+	
+	const ExpectedValue & operator+= (T alpha) {
+		if ((theta + alpha <= upperLimit) && theta + alpha >= lowerLimit) {
+			theta += alpha;
+		}
+		return *this;
+	}
+
+	const ExpectedValue & operator -= (T alpha) {
+		if ((theta - alpha <= upperLimit) && theta - alpha >= lowerLimit) {
+			theta -= alpha;
+		}
+		return *this;
+
+	}
+	
+
+
+};
+//class ExpectedValue;	// forward declaration
 //MQTT///////////////////////////////////////////////////////////////////////////
+
 class myMosq : public mosqpp::mosquittopp
 {
 private:
@@ -427,4 +480,16 @@ public:
 	
 	afx_msg void OnSnapAround();
 	afx_msg void OnClose();
+
+
+public:
+	const int STEP_ANGLE = 10;
+	
+	ExpectedValue<double> expectedPan;
+	ExpectedValue<double> expectedTilt;
+	
+	
+
+
+
 };
