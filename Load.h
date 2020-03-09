@@ -36,4 +36,5 @@ public:
 	afx_msg void OnBnClickedOk();	
 	afx_msg void OnBnClickedCancel();
 	(CKICT_MPDlg *) p;//ºÎ¸ð
+	afx_msg void OnBnClickedRadioSnapAround();
 };

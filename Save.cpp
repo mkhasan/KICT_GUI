@@ -13,7 +13,8 @@ IMPLEMENT_DYNAMIC(Save, CDialogEx)
 
 Save::Save(CWnd* pParent /*=NULL*/)
 	: CDialogEx(Save::IDD, pParent)
-	, v_sec(3)
+	, v_sec(1)
+	, m_ImageSel(0)
 {
 
 }
@@ -50,6 +51,8 @@ BEGIN_MESSAGE_MAP(Save, CDialogEx)
 	ON_BN_CLICKED(IDC_BT_SEMISAVE, &Save::OnBnClickedBtSemisave)
 	ON_BN_CLICKED(IDC_BT_SEMISTOP, &Save::OnBnClickedBtSemistop)
 	ON_BN_CLICKED(IDC_BT_MANSEMI, &Save::OnBnClickedBtMansemi)
+	ON_BN_CLICKED(IDC_RADIO_IMAGE, &Save::OnBnClickedRadioImage)
+	ON_BN_CLICKED(IDC_RADIO_VIDEO, &Save::OnBnClickedRadioVideo)
 END_MESSAGE_MAP()
 
 
@@ -94,7 +97,10 @@ BOOL Save::OnInitDialog()
 		ed_state_auto.SetWindowTextW(_T("Stop"));
 	}
 
-
+	CButton* pButton = (CButton*)GetDlgItem(IDC_RADIO_IMAGE);
+	pButton->SetCheck(true);
+	imageSelected = true;
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -132,11 +138,18 @@ void Save::OnBnClickedBtAutosave() //저장 시작
 		wnd_p->_save = 1;
 		char str[16] = { 0, };
 		sprintf_s(str,"%.3f",(1/(float)v_sec));
-		wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/AUTO_SAVE_START", strlen(str), str, 1, false);
+		
+		//int k = imageSelected;
+		if (imageSelected)
+			wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/AUTO_SAVE_START", strlen(str), str, 1, false);
+		else
+			wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/AUTO_VIDEO_START", strlen(str), str, 1, false);
 
 		m_semisave.EnableWindow(false);
 		m_semiman.EnableWindow(false);
 		m_stopsemi.EnableWindow(false);
+		GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(FALSE);
+		GetDlgItem(IDC_RADIO_VIDEO)->EnableWindow(FALSE);
 	}	
 }
 
@@ -149,11 +162,17 @@ void Save::OnBnClickedBtAutostop()
 {
 	ed_state_auto.SetWindowTextW(_T("Stop"));
 	wnd_p->_save = 0;
-	wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/AUTO_SAVE_STOP", 0, "", 1, false);
+	if (imageSelected)
+		wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/AUTO_SAVE_STOP", 0, "", 1, false);
+	else
+		wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/AUTO_VIDEO_STOP", 0, "", 1, false);
 
 	m_semisave.EnableWindow(true);
 	m_semiman.EnableWindow(true);
 	m_stopsemi.EnableWindow(true);
+	GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(TRUE);
+	GetDlgItem(IDC_RADIO_VIDEO)->EnableWindow(TRUE);
+
 }
 
 void Save::OnBnClickedBtSemisave()
@@ -181,10 +200,35 @@ void Save::OnBnClickedBtSemistop()
 	m_autosave.EnableWindow(true);
 	m_automan.EnableWindow(true);
 	m_stopauto.EnableWindow(true);
+	GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(TRUE);
+	GetDlgItem(IDC_RADIO_VIDEO)->EnableWindow(TRUE);
+
 }
 
 
 void Save::OnBnClickedBtMansemi()
 {
 	wnd_p->mqtt0->publish(NULL, "KICT_MP/CLIENT/SEMI_AUTO_SNAP", 0, "", 1, false);
+}
+
+void Save::OnBnClickedRadioImage()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData(TRUE);
+	int k = m_ImageSel;
+	GetDlgItem(IDC_BT_MANAUTO)->EnableWindow(TRUE);
+	//GetDlgItem(IDC_BT_MANSEMI)->EnableWindow(TRUE);
+	imageSelected = true;
+}
+
+
+void Save::OnBnClickedRadioVideo()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData(TRUE);
+	int k = m_ImageSel;
+	GetDlgItem(IDC_BT_MANAUTO)->EnableWindow(FALSE);
+	//GetDlgItem(IDC_BT_MANSEMI)->EnableWindow(FALSE);
+	imageSelected = false;
+	
 }

@@ -46,4 +46,8 @@ public:
 	CButton m_stopsemi;
 	CButton m_automan;
 	CButton m_semiman;
+	int m_ImageSel;
+	afx_msg void OnBnClickedRadioImage();
+	afx_msg void OnBnClickedRadioVideo();
+	bool imageSelected;
 };

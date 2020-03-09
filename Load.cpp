@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(Load, CDialogEx)
 
 	ON_BN_CLICKED(IDOK, &Load::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &Load::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_RADIO_SNAP_AROUND, &Load::OnBnClickedRadioSnapAround)
 END_MESSAGE_MAP()
 
 
@@ -54,6 +55,10 @@ BOOL Load::OnInitDialog()
 	_type = 0;
 	p = (CKICT_MPDlg *)::AfxGetMainWnd();
 	
+	CButton* pButton = (CButton*)GetDlgItem(IDC_RADIO_SNAP_AROUND);
+	pButton->SetCheck(FALSE);
+
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -91,12 +96,14 @@ void Load::OnBnClickedButton3() //불러오기
 
 	CString auto_man;
 	if (_type == 0)
-		auto_man = "auto_or_manual=1"; //자동
+		auto_man = "(auto_or_manual=1 or auto_or_manual=5)"; //자동
 	else if (_type == 1)
 		auto_man = "auto_or_manual=0"; //수동
 	else if (_type == 2)
 		auto_man = "(auto_or_manual=2 or auto_or_manual=3)"; //SEMI
-
+	else if (_type == 3)
+		auto_man = "(auto_or_manual = 4 or auto_or_manual = 6)";	// SNAP AROUND
+	
 	CString qu;
 	//entry_no 찾기
 	qu.Format(_T("select entry_no from real_time_data where %s and (date_time BETWEEN '%s' AND '%s')"), auto_man, CString(t_start), CString(t_end));
@@ -150,6 +157,12 @@ void Load::OnBnClickedButton3() //불러오기
 		dir.Format("C:\\data\\semi\\%s", str);
 		CreateDirectoryA(dir, NULL);
 	}
+	else if (_type == 3) {	// move aournd
+		sprintf_s(str, "%04d%02d%02d_%02d%02d%02d-%02d%02d%02d", m_timeMC.GetYear(), m_timeMC.GetMonth(), m_timeMC.GetDay(), m_time1.GetHour(), m_time1.GetMinute(), m_time1.GetSecond(), m_time2.GetHour(), m_time2.GetMinute(), m_time2.GetSecond());
+		sprintf_s(filename, "C:\\data\\move_around\\%s\\%s.txt", str, str);
+		dir.Format("C:\\data\\move_around\\%s", str);
+		CreateDirectoryA(dir, NULL);
+	}
 
 	FILE *fp;
 	fopen_s(&fp, filename, "w");
@@ -201,6 +214,14 @@ void Load::OnBnClickedButton3() //불러오기
 			strcpy_s(mode, "semi");
 		else if (auto_or_manual == '3')
 			strcpy_s(mode, "snap");
+		else if (auto_or_manual == '4')
+			strcpy_s(mode, "image_around");
+		else if (auto_or_manual == '5')
+			strcpy_s(mode, "auto_video");
+		else if (auto_or_manual == '6')
+			strcpy_s(mode, "video_around");
+
+
 
 		sprintf_s(str, "%d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\r\n", cnt, dt, mode, imu_time_stamp, roll, pitch, yaw, roll_accel, pitch_accel, yaw_accel, gps_time_stamp, satellite_count, latitude, latitude_dir, longitude, longitude_dir, quality, VOG, COG, pan_angle, tilt_angle, position_0, position_1, position_2, position_3, speed_0, speed_1, speed_2, speed_3);
 		fwrite(str, sizeof(char), strlen(str), fp); //데이터 쓰기
@@ -248,7 +269,8 @@ void Load::OnBnClickedButton1() //조회
 
 	BOOL re;		
 	try {	
-		re=p->robot_db.OpenEx(_T("DSN=robot_db;UID=root;PWD=test123"),CDatabase::noOdbcDialog);
+		//re=p->robot_db.OpenEx(_T("DSN=robot_db;UID=root;PWD=test123"),CDatabase::noOdbcDialog);
+		re = p->robot_db.OpenEx(_T("DSN=TestDB;UID=root;PWD=test123"), CDatabase::noOdbcDialog);
 	}	
 	catch (CDBException * pEX) {
 		pEX->ReportError();
@@ -262,11 +284,13 @@ void Load::OnBnClickedButton1() //조회
 	CRecordset record(&p->robot_db);
 	CString auto_man;
 	if (_type == 0)
-		auto_man = "auto_or_manual=1"; //자동
+		auto_man = "(auto_or_manual=1 or auto_or_manual=5)"; //자동
 	else if (_type == 1)
 		auto_man = "auto_or_manual=0"; //수동
 	else if (_type == 2)
 		auto_man = "(auto_or_manual=2 or auto_or_manual=3)"; //SEMI
+	else if (_type == 3)
+		auto_man = "(auto_or_manual = 4 or auto_or_manual = 6)";	// SNAP AROUND
 
 	CString qu;	
 	//qu.Format(_T("select date_time from real_time_data where (auto_or_manual=%d) and (date_time BETWEEN '%s' AND '%s')"), _type, CString(t_start), CString(t_end));
@@ -303,6 +327,10 @@ void Load::RadioCtrl(UINT ID)
 			_type = 2; //SEMI
 			break;
 	}
+
+	CButton* pButton = (CButton*)GetDlgItem(IDC_RADIO_SNAP_AROUND);
+	pButton->SetCheck(FALSE);
+
 }
 
 void Load::OnBnClickedOk()
@@ -313,4 +341,23 @@ void Load::OnBnClickedOk()
 void Load::OnBnClickedCancel()
 {
 	CDialogEx::OnCancel();
+}
+
+
+void Load::OnBnClickedRadioSnapAround()
+{
+	// TODO: Add your control notification handler code here
+
+	CButton* pButton = (CButton*)GetDlgItem(IDC_RA1);
+	pButton->SetCheck(FALSE);
+
+	pButton = (CButton*)GetDlgItem(IDC_RA2);
+	pButton->SetCheck(FALSE);
+
+	pButton = (CButton*)GetDlgItem(IDC_RA3);
+	pButton->SetCheck(FALSE);
+
+	_type = 3;
+
+
 }
